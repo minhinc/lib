@@ -13,18 +13,17 @@ argv
   if len(argv)==0:
    self.ftp=FTP("ftpupload.net")
    self.ftp.login(os.getenv("FTP_USER"),os.getenv("FTP_PASSWORD"))
-   self.ftp.set_pasv(False)
+   #self.ftp.set_pasv(False)
    print(f'<=> _ftp.__init__ logged in successfully')
    if 'rootdir' in argv:_ftp.root_dir=argv['rootdir']
 
- def isfile(self,file_,**kwarg_):
+ def isfile(self,**kwarg_):
   '''
-file_(s) name of the file
 kwarg_
  file(s) filename'''
   print(f'>< isfile {kwarg_=}')
   try:
-   self.ftp.size(file=kwarg_['file'])
+   self.ftp.size(kwarg_['file'])
    return True
   except Exception as e:
    print(f'<=> isfile exception, not a file, {e=}')
@@ -38,7 +37,7 @@ kwarg_
  dir_(b) if ftpfile argument is a directory. to avoid overloading ftp server'''
   if not 'dir_' in kwarg_:kwarg_['mchfile'],kwarg_['ftpfile']=[self.getfullpath(scope=('mchn' if x=='mchfile' else 'ftp'),file=kwarg_[x]) for x in ('mchfile','ftpfile')]
   print(f'<=> get {kwarg_=}')
-  if 'dir_' in kwarg_ or not self.isfile(kwarg_['ftpfile']):
+  if 'dir_' in kwarg_ or not self.isfile(file=kwarg_['ftpfile']):
    kwarg_['mchfile']+='/'+os.path.basename(kwarg_['ftpfile'])
    os.makedirs(kwarg_['mchfile'],exist_ok=True)
    try:
@@ -73,7 +72,7 @@ kwarg_
      elif entry.is_dir():
       self._put(ftpfile=kwarg_['ftpfile'], mchfile=kwarg_['mchfile']+'/'+entry.name,dir_=True)
   else:
-   self.ftpfile(mode='up',ftpfile=kwarg_['ftpfile']+('/'+entry.name if not self.isfile(kwarg_['ftpfile']) else ''),mchfile=kwarg_['mchfile']+'/'+entry.name)
+   self.ftpfile(mode='up',ftpfile=kwarg_['ftpfile']+('/'+entry.name if not self.isfile(file=kwarg_['ftpfile']) else ''),mchfile=kwarg_['mchfile']+'/'+entry.name)
 
 
  def _ls(self,**kwarg_):
@@ -84,7 +83,7 @@ kwarg_
  dir_(b) if ftpfile argument is a directory. to avoid overloading ftp server'''
   if not 'dir_' in kwarg_:kwarg_['ftpfile']=self.getfullpath(file=kwarg_['ftpfile'])
   print(f'<=> _ls {kwarg_=}')
-  if 'dir_' in kwarg_ or not self.isfile(kwarg_['ftpfile']):
+  if 'dir_' in kwarg_ or not self.isfile(file=kwarg_['ftpfile']):
    try:
     for file, facts in self.ftp.mlsd(kwarg_['ftpfile']):
      if not 'recursive' in kwarg_ or re.search(r'False',kwarg_['recursive'],flags=re.I) or re.search(r'True',kwarg_['recursive'],flags=re.I) and facts['type']=='file':
@@ -104,7 +103,7 @@ kwarg_
  dir_(b) if ftpfile argument is a directory. to avoid overloading ftp server'''
   if not 'dir_' in kwarg_:kwarg_['ftpfile']=self.getfullpath(file=kwarg_['ftpfile'])
   print(f'<=> _delete {kwarg_=}')
-  if 'dir_' in kwarg_ or not self.isfile(kwarg_['ftpfile']):
+  if 'dir_' in kwarg_ or not self.isfile(file=kwarg_['ftpfile']):
    try:
     for file, facts in self.ftp.mlsd(kwarg_['ftpfile']):
      if facts['type']=='file':
