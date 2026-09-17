@@ -49,7 +49,7 @@ kwarg_
    except Exception as e:
     print(f'Exception recieved, {e=}')
   else:
-   self.ftpfile(mode='ret',mchfile=kwarg_['mchfile']+('/'+os.path.basenme(kwarg_['ftpfle']) if not os.path.isfile(kwarg_['mchfile']) else ''),ftpfile=kwarg_['ftpfile'])
+   self.ftpfile(mode='ret',mchfile=kwarg_['mchfile']+('/'+os.path.basename(kwarg_['ftpfile']) if not os.path.isfile(kwarg_['mchfile']) else ''),ftpfile=kwarg_['ftpfile'])
 
  def _put(self,**kwarg_):
   '''
@@ -72,8 +72,7 @@ kwarg_
      elif entry.is_dir():
       self._put(ftpfile=kwarg_['ftpfile'], mchfile=kwarg_['mchfile']+'/'+entry.name,dir_=True)
   else:
-   self.ftpfile(mode='up',ftpfile=kwarg_['ftpfile']+('/'+entry.name if not self.isfile(file=kwarg_['ftpfile']) else ''),mchfile=kwarg_['mchfile']+'/'+entry.name)
-
+   self.ftpfile(mode='up',ftpfile=kwarg_['ftpfile']+('/'+os.path.basename(kwarg_['mchfile']) if not self.isfile(file=kwarg_['ftpfile']) else ''),mchfile=kwarg_['mchfile'])
 
  def _ls(self,**kwarg_):
   '''
