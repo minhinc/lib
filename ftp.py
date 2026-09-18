@@ -17,6 +17,7 @@ argv
    print(f'<=> _ftp.__init__ logged in successfully')
    if 'rootdir' in argv:_ftp.root_dir=argv['rootdir']
 
+ """
  def isfile(self,**kwarg_):
   '''
 kwarg_
@@ -28,6 +29,19 @@ kwarg_
   except Exception as e:
    print(f'<=> isfile exception, not a file, {e=}')
   return False
+ """
+
+ def isfile(self,**kwarg_):
+  print(f'>< isfile2 {kwarg_=}')
+  current=self.ftp.pwd()
+  try:
+   self.ftp.cwd(kwarg_['file'])
+   self.ftp.cmd(current)
+   print(f'<> False')
+   return False
+  except:
+   print(f'<> True')
+   return True
 
  def _get(self,**kwarg_):
   '''
