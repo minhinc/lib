@@ -36,7 +36,8 @@ kwarg_
   current=self.ftp.pwd()
   try:
    self.ftp.cwd(kwarg_['file'])
-   self.ftp.cmd(current)
+   print(f'<=>isfile2 ftp.cwd')
+   self.ftp.cwd(current)
    print(f'<> False')
    return False
   except:
@@ -45,6 +46,7 @@ kwarg_
 
  def _get(self,**kwarg_):
   '''
+Get ftpfile into mchfile.
 kwarg_
  mchfile(s) machine filename
  ftpfile(s) ftp server filename
